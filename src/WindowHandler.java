@@ -12,18 +12,20 @@ public class WindowHandler extends Canvas{
     private Complex focus;
     private int counter = 0;
     private String path = "C:\\Users\\Felix Ghosh\\Desktop\\Mandebrot_Set\\image";
+    private int iterations;
 
-    public WindowHandler(int width, int height, double depth, Complex focus){
+    public WindowHandler(int width, int height, double depth, Complex focus, int iterations){
         this.width = width;
         this.height = height;
         this.depth = depth;
         this.focus = focus;
+        this.iterations = iterations;
     }
 
     public void drawWindow(String title){
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Canvas canvas = new WindowHandler(width, height, depth,focus);
+        Canvas canvas = new WindowHandler(width, height, depth,focus, iterations);
         canvas.setSize(width, height);
         frame.add(canvas);
         frame.pack();
@@ -47,7 +49,7 @@ public class WindowHandler extends Canvas{
         Complex oldCoordinates = new Complex(x,y);
         Complex newCoordinates = new Complex(0,0);
         int counter = 0;
-        for(int i = 1; i <= 767; i++){
+        for(int i = 1; i <= iterations; i++){
             newCoordinates = Complex.complexSquare(newCoordinates);
             newCoordinates.add(oldCoordinates);
             counter = i;
@@ -59,21 +61,35 @@ public class WindowHandler extends Canvas{
         int gValue;
         int bValue;
 
-        bValue = counter%255;
+        if(counter == iterations){
+            rValue = 0;
+            gValue = 0;
+            bValue = 0;
+        }else if(counter <= 255){
+            rValue = 0;
+            gValue = 0;
+            bValue = counter % 255;
+        } else if(counter <= 511){
+            rValue = 0;
+            gValue = counter % 255;
+            bValue = (counter + 85) % 255;
+        } else{
+            rValue = counter % 255;
+            gValue = (counter + 190) % 255;
+            bValue = (counter + 85) % 255;
+        }
+
+        /*bValue = counter%255;
 
         if(counter > 255) rValue = (counter + 85)%255;
         else rValue = 0;
 
         if(counter > 511) gValue = (counter + 170)%255;
-        else gValue = 0;
+        else gValue = 0;*/
 
         //System.out.println((newCoordinates.getReal()));
 
-        if(counter == 767){
-            rValue = 0;
-            gValue = 0;
-            bValue = 0;
-        }
+
         return new Color(rValue, gValue, bValue);
 
         //double deltaX = oldCoordinates.getReal() - newCoordinates.getReal();
@@ -117,6 +133,7 @@ public class WindowHandler extends Canvas{
         try
         {
             while(true){
+                System.out.println(iterations);
                 paintPixels(g);
                /* BufferedImage image = new BufferedImage(width * 2, height * 2, BufferedImage.TYPE_INT_RGB);
                 Graphics2D graphics2D = image.createGraphics();
@@ -129,7 +146,9 @@ public class WindowHandler extends Canvas{
                 String filepath = path + counter +".jpg";
                 ImageIO.write(image,"jpeg", new File(filepath));
                 counter++;*/
-                depth = depth*2;
+                depth = depth*8;
+                iterations = (int)(iterations * 1.1);
+
             }
         }
         catch(Exception exception)
