@@ -1,4 +1,7 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class WindowHandler extends Canvas{
@@ -7,6 +10,8 @@ public class WindowHandler extends Canvas{
     private int height;
     private double depth;
     private Complex focus;
+    private int counter = 0;
+    private String path = "C:\\Users\\Felix Ghosh\\Desktop\\Mandebrot_Set\\image";
 
     public WindowHandler(int width, int height, double depth, Complex focus){
         this.width = width;
@@ -17,11 +22,14 @@ public class WindowHandler extends Canvas{
 
     public void drawWindow(String title){
         JFrame frame = new JFrame(title);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Canvas canvas = new WindowHandler(width, height, depth,focus);
         canvas.setSize(width, height);
         frame.add(canvas);
         frame.pack();
         frame.setVisible(true);
+
+
     }
 
     private double transformX(int x, double depth){
@@ -39,24 +47,41 @@ public class WindowHandler extends Canvas{
         Complex oldCoordinates = new Complex(x,y);
         Complex newCoordinates = new Complex(0,0);
         int counter = 0;
-        for(int i = 1; i <= 255; i++){
+        for(int i = 1; i <= 767; i++){
             newCoordinates = Complex.complexSquare(newCoordinates);
             newCoordinates.add(oldCoordinates);
+            counter = i;
             if(newCoordinates.getReal() > 2 && newCoordinates.getImaginary() > 2){
-                counter = (int)((float)i*1);
-                //System.out.println(i);
                 break;
             }
         }
-        double deltaX = oldCoordinates.getReal() - newCoordinates.getReal();
-        double deltaY = oldCoordinates.getImaginary() - newCoordinates.getImaginary();
-        double growth = deltaY / deltaX;
+        int rValue;
+        int gValue;
+        int bValue;
+
+        bValue = counter%255;
+
+        if(counter > 255) rValue = (counter + 85)%255;
+        else rValue = 0;
+
+        if(counter > 511) gValue = (counter + 170)%255;
+        else gValue = 0;
+
+        //System.out.println((newCoordinates.getReal()));
+
+        if(counter == 767){
+            rValue = 0;
+            gValue = 0;
+            bValue = 0;
+        }
+        return new Color(rValue, gValue, bValue);
+
+        //double deltaX = oldCoordinates.getReal() - newCoordinates.getReal();
+        //double deltaY = oldCoordinates.getImaginary() - newCoordinates.getImaginary();
+        //double distance = Math.sqrt(Math.pow(newCoordinates.getReal(), 2) + Math.pow(newCoordinates.getImaginary(), 2));
         //System.out.println("old: (" + oldCoordinates.getReal() + "," + oldCoordinates.getImaginary() +") new: (" + newCoordinates.getReal() + "," + newCoordinates.getImaginary() + ")");
-        //System.out.println(growth);
-        if(counter > 255) {
-            //System.out.println("Counter: " + counter);
-            return new Color(255,255,255);
-        } else return new Color(0,0,counter);
+        //System.out.println(distance);
+
         //return new Color((float)0.0,(float)0.0,counter);
 
 
@@ -87,20 +112,42 @@ public class WindowHandler extends Canvas{
     public void paint(Graphics g){
         //long t0 = System.currentTimeMillis();
 
+       // paintPixels(g);
 
-        //System.out.println("Time: " + (System.currentTimeMillis() - t0));
-        try {
+        try
+        {
             while(true){
                 paintPixels(g);
-                Thread.sleep(1000);
+               /* BufferedImage image = new BufferedImage(width * 2, height * 2, BufferedImage.TYPE_INT_RGB);
+                Graphics2D graphics2D = image.createGraphics();
+                graphics2D.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+                graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                graphics2D.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+                graphics2D.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.	VALUE_COLOR_RENDER_QUALITY);
+                graphics2D.scale(2,2);
+                paintPixels(graphics2D);
+                String filepath = path + counter +".jpg";
+                ImageIO.write(image,"jpeg", new File(filepath));
+                counter++;*/
+                depth = depth*2;
+            }
+        }
+        catch(Exception exception)
+        {
+            exception.printStackTrace();
+        }
+
+        //System.out.println("Time: " + (System.currentTimeMillis() - t0));
+        /*try {
+            while(true){
+                paintPixels(g);
+                Thread.sleep(1);
                 depth = depth*1.5;
             }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-        //System.out.println("(600,350) -> (" + newX + "," + newY + ")");
+        }*/
     }
 
 }
