@@ -30,8 +30,6 @@ public class WindowHandler extends Canvas{
         frame.add(canvas);
         frame.pack();
         frame.setVisible(true);
-
-
     }
 
     private double transformX(int x, double depth){
@@ -53,7 +51,7 @@ public class WindowHandler extends Canvas{
             newCoordinates = Complex.complexSquare(newCoordinates);
             newCoordinates.add(oldCoordinates);
             counter = i;
-            if(newCoordinates.getReal() > 2 && newCoordinates.getImaginary() > 2){
+            if(newCoordinates.getReal() > 2 || newCoordinates.getImaginary() > 2 || newCoordinates.getReal() < -2 || newCoordinates.getImaginary() < -2){
                 break;
             }
         }
@@ -66,17 +64,17 @@ public class WindowHandler extends Canvas{
             gValue = 0;
             bValue = 0;
         }else if(counter <= 255){
-            rValue = 0;
-            gValue = 0;
-            bValue = counter % 255;
+            rValue = (int)(0.35 * counter);
+            gValue = (int)(0.15 * counter);
+            bValue = (counter+20) % 255;
         } else if(counter <= 511){
             rValue = 0;
             gValue = counter % 255;
-            bValue = (counter + 85) % 255;
+            bValue = (int)(0.35 * counter);
         } else{
-            rValue = counter % 255;
-            gValue = (counter + 190) % 255;
-            bValue = (counter + 85) % 255;
+            rValue = counter % 256;
+            gValue = (counter + 190) % 256;
+            bValue = (counter + 85) % 256;
         }
 
         /*bValue = counter%255;
@@ -146,7 +144,9 @@ public class WindowHandler extends Canvas{
                 String filepath = path + counter +".jpg";
                 ImageIO.write(image,"jpeg", new File(filepath));
                 counter++;*/
-                depth = depth*8;
+                System.out.println(depth);
+                depth = depth*2;
+                //Thread.sleep(500);
                 iterations = (int)(iterations * 1.1);
 
             }

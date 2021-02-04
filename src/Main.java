@@ -9,7 +9,8 @@ public class Main {
         // -0.4621603,-0.5823998
         // -4.597541e-1,-5.702093e-1
         // -4.595053e-1, -5.810975e-1
-        WindowHandler wh = new WindowHandler(1920,1080, 300.0, new Complex(-0.4601222,-0.5702860), 767);
+        // -0.45961869,-0.57017670
+        WindowHandler wh = new WindowHandler(1920,1080, 300, new Complex(-0.45961869,-0.57017670), 256);
         wh.drawWindow("Mandelbrot");
     }
 
