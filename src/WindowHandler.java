@@ -51,7 +51,8 @@ public class WindowHandler extends Canvas{
             newCoordinates = Complex.complexSquare(newCoordinates);
             newCoordinates.add(oldCoordinates);
             counter = i;
-            if(newCoordinates.getReal() > 2 || newCoordinates.getImaginary() > 2 || newCoordinates.getReal() < -2 || newCoordinates.getImaginary() < -2){
+            //if(newCoordinates.getReal() > 2 || newCoordinates.getImaginary() > 2 || newCoordinates.getReal() < -2 || newCoordinates.getImaginary() < -2){
+            if(Math.sqrt(Math.pow(newCoordinates.getReal(),2) + Math.pow(newCoordinates.getImaginary(),2)) > 2){
                 break;
             }
         }
@@ -72,9 +73,9 @@ public class WindowHandler extends Canvas{
             gValue = counter % 255;
             bValue = (int)(0.35 * counter);
         } else{
-            rValue = counter % 256;
-            gValue = (counter + 190) % 256;
-            bValue = (counter + 85) % 256;
+            rValue = (counter + 210) % 256;
+            gValue = counter % 256;
+            bValue = (counter + 45) % 256;
         }
 
         /*bValue = counter%255;
@@ -145,9 +146,9 @@ public class WindowHandler extends Canvas{
                 ImageIO.write(image,"jpeg", new File(filepath));
                 counter++;*/
                 System.out.println(depth);
-                depth = depth*2;
+                depth = depth*4;
                 //Thread.sleep(500);
-                iterations = (int)(iterations * 1.1);
+                iterations = (int)(iterations * 1.1 * 1.1);
 
             }
         }
